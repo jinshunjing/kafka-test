@@ -1,0 +1,14 @@
+# Server
+server:
+  port: 8001
+
+# Kafka
+kafka:
+  producer:
+    servers: 127.0.0.1:9092
+    retries: 0
+    batch-size: 4096
+    linger: 1
+    buffer-memory: 40960
+
+

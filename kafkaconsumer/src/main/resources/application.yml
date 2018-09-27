@@ -1,0 +1,15 @@
+# Server
+server:
+  port: 8002
+
+# Kafka
+kafka:
+  consumer:
+    servers: 127.0.0.1:9092
+    group-id: test_server
+    session-timeout: 6000
+    enable-auto-commit: true
+    auto-commit-interval: 100
+    auto-offset-reset: latest
+    concurrency: 1
+
