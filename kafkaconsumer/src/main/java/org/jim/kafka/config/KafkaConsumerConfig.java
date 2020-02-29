@@ -2,7 +2,7 @@ package org.jim.kafka.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.jim.kafka.listener.TicerListener;
+import org.jim.kafka.listener.TickerListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,6 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
-
     @Value("${kafka.consumer.servers}")
     private String servers;
     @Value("${kafka.consumer.enable-auto-commit}")
@@ -35,20 +34,11 @@ public class KafkaConsumerConfig {
     @Value("${kafka.consumer.concurrency}")
     private int concurrency;
 
-    @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(this.consumerFactory());
-        factory.setConcurrency(concurrency);
-        factory.getContainerProperties().setPollTimeout(1500);
-        return factory;
-    }
-
-    public ConsumerFactory<String, String> consumerFactory() {
+    private ConsumerFactory<String, String> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(this.consumerConfigs());
     }
 
-    public Map<String, Object> consumerConfigs() {
+    private Map<String, Object> consumerConfigs() {
         Map<String, Object> propsMap = new HashMap<>(16);
         propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -63,8 +53,17 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public TicerListener ticerListener() {
-        return new TicerListener();
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(this.consumerFactory());
+        factory.setConcurrency(concurrency);
+        factory.getContainerProperties().setPollTimeout(1500);
+        return factory;
+    }
+
+    @Bean
+    public TickerListener tickerListener() {
+        return new TickerListener();
     }
 
 }

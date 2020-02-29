@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class KafkaMessagePublisher {
-
     @Autowired
     private KafkaTemplate kafkaTemplate;
 
@@ -17,5 +16,4 @@ public class KafkaMessagePublisher {
         kafkaTemplate.send(topic,  message);
         log.info("publish kafka message exit");
     }
-
 }

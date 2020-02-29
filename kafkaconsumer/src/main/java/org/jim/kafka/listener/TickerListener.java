@@ -5,14 +5,12 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 
 @Slf4j
-public class TicerListener {
+public class TickerListener {
 
     @KafkaListener(topics = {"test.ticker"})
     public void listen(ConsumerRecord<?, ?> record) {
-        log.info("listen entrance");
         String msg = record.value().toString();
-        log.info("mesage: {}", msg);
-        log.info("listen exit");
+        log.info("Received message: {}", msg);
     }
 
 }

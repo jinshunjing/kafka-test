@@ -13,10 +13,14 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Kafka消息提供者
+ *
+ * @author Jim
+ */
 @Configuration
 @EnableKafka
 public class KafkaProducerConfig {
-
     @Value("${kafka.producer.servers}")
     private String servers;
     @Value("${kafka.producer.retries}")
@@ -28,7 +32,11 @@ public class KafkaProducerConfig {
     @Value("${kafka.producer.buffer-memory}")
     private int bufferMemory;
 
-    public Map<String, Object> producerConfigs() {
+    private ProducerFactory<String, String> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    private Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         props.put(ProducerConfig.RETRIES_CONFIG, retries);
@@ -39,10 +47,6 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return props;
-    }
-
-    public ProducerFactory<String, String> producerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
